@@ -1,7 +1,7 @@
 # coding=utf-8
 import util
 import dictionary
-
+from util import *
 
 def init_dictionary() -> dictionary.Dic:
     poem_list = []
@@ -14,4 +14,5 @@ def init_dictionary() -> dictionary.Dic:
 
 if __name__ == '__main__':
     dic = init_dictionary()
+    print(and2(dic.union('东', '南'),dic.ormany(['我','爱'])))    #（东 or 南）and (我 or 爱)
     print("done")
