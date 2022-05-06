@@ -12,6 +12,17 @@ def read_data() -> list:
     return poem_str
 
 
+def generate_term_dict(text: list):
+    term_dict = {}
+    for sentence in text:
+        for c in sentence:
+            if c in term_dict:
+                term_dict[c] += 1
+            else:
+                term_dict[c] = 1
+    return term_dict
+
+
 def and2(p1, p2):
     """针对两个链表的and"""
     res = deque()
