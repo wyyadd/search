@@ -71,49 +71,60 @@ class Dic:
                     title_term_dict[term] = Term(term, poem.id, fre)
         return content_term_dict, title_term_dict
 
-    """输入为N个关键词，返回为两个关键词对应链表的并集"""
+
+    """输入为N个关键词，返回为两个关键词对应链表的并集，并综合标题索引和内容索引，结果按照分数从大到小排序"""
 
     def union(self, *term) -> deque:
-        ans = deque()
-        candidates_list = []
-        for t in term:
-            if t in self.content_term_list:
-                candidates_list.append(self.content_term_list[t].posting_list)
-        if len(candidates_list) == 0:
-            return ans
-        list.sort(candidates_list, key=len, reverse=True)
-        ans = candidates_list[0]
-        for p in candidates_list[1:]:
-            ans = util.or2(ans, p)
-        return ans
-
-    """输入为N个关键词，返回为两个关键词对应链表的交集"""
+        res=[]
+        for term_list in [self.content_term_list,self.title_term_list]:
+            ans = deque()
+            candidates_list = []
+            for t in term:
+                if t in term_list:
+                    candidates_list.append(term_list[t].posting_list)
+            if len(candidates_list) != 0:
+                list.sort(candidates_list, key=len, reverse=True)
+                ans = candidates_list[0]
+                for p in candidates_list[1:]:
+                    ans = util.or2(ans, p)
+            res.append(ans)
+        return util.merge_content_title(res[0],res[1])
+    """输入为N个关键词，返回为两个关键词对应链表的交集，并综合标题索引和内容索引，结果按照分数从大到小排序"""
 
     def intersection(self, *term) -> deque:
-        ans = deque()
-        candidates_list = []
-        for t in term:
-            if t not in self.content_term_list:
-                return ans
-            else:
-                candidates_list.append(self.content_term_list[t].posting_list)
-        list.sort(candidates_list, key=len)
-        ans = candidates_list[0]
-        for p in candidates_list[1:]:
-            ans = util.and2(ans, p)
-        return ans
+        res = []
+        for term_list in [self.content_term_list, self.title_term_list]:
+            ans = deque()
+            candidates_list = []
+            for t in term:
+                if t not in term_list:
+                    candidates_list.clear()
+                    break
+                else:
+                    candidates_list.append(term_list[t].posting_list)
+            if len(candidates_list)>0:
+                list.sort(candidates_list, key=len)
+                ans = candidates_list[0]
+                for p in candidates_list[1:]:
+                    ans = util.and2(ans, p)
+            res.append(ans)
+        return util.merge_content_title(res[0], res[1])
 
-    """输入为两个关键词，返回为两个关键词对应链表的and not"""
+    """输入为两个关键词，返回为两个关键词对应链表的and not，并综合标题索引和内容索引，结果按照分数从大到小排序"""
 
     def and_not(self, s1, s2) -> deque:
-        if s1 not in self.content_term_list.keys():
-            return deque()
-        if s2 not in self.content_term_list.keys():
-            return self.content_term_list[s1].posting_list
-        p1 = self.content_term_list[s1].posting_list
-        p2 = self.content_term_list[s2].posting_list
-        return util.and_not2(p1, p2)
-
+        res = []
+        for term_list in [self.content_term_list, self.title_term_list]:
+            ans=deque()
+            if s1 in self.content_term_list.keys():
+                if s2 not in self.content_term_list.keys():
+                    ans=term_list[s1].posting_list
+                else:
+                    p1 = self.content_term_list[s1].posting_list
+                    p2 = self.content_term_list[s2].posting_list
+                    ans= util.and_not2(p1, p2)
+            res.append(ans)
+        return util.merge_content_title(res[0], res[1])
     # def union(self, s1, s2) -> deque:
     #     """输入为两个关键词，返回为两个关键词对应链表的并集"""
     #     if s1 not in self.term_list.keys() and s2 not in self.term_list.keys():
