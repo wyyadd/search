@@ -1,7 +1,7 @@
 # coding=utf-8
 import util
 import dictionary
-from util import *
+
 
 def init_dictionary() -> dictionary.Dic:
     poem_list = []
@@ -14,5 +14,16 @@ def init_dictionary() -> dictionary.Dic:
 
 if __name__ == '__main__':
     dic = init_dictionary()
-    print(and2(dic.union('东', '南'),dic.ormany(['我','爱'])))    #（东 or 南）and (我 or 爱)
+    print("东、南 并集：" + str(dic.union('东', '南')))
+    print("东、南 交集：" + str(dic.intersection('东', '南')))
+    print("东、南 AND NOT" + str(dic.and_not('东', '南')))
+    print("东、南、大 并集：" + str(dic.union('东', '南', '大')))
+    print("东、南、大 交集：" + str(dic.intersection('东', '南', '大')))
+
+    print("明、月 并集：" + str(dic.union('明', '月')))
+    print("明、月 交集：" + str(dic.intersection('明', '月')))
+    print("明、月 AND NOT" + str(dic.and_not('明', '月')))
+    print("明、月、花 并集：" + str(dic.union('明', '月', '花')))
+    print("明、月、花 交集：" + str(dic.intersection('明', '月', '花')))
+
     print("done")
