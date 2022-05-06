@@ -3,6 +3,7 @@ import os
 from collections import deque
 
 
+# 从dataset文件夹中读取诗句
 def read_data() -> list:
     poem_str = []
     for s in os.listdir("./dataset"):

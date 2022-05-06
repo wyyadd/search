@@ -3,6 +3,7 @@ import util
 import dictionary
 
 
+# 初始化字典函数
 def init_dictionary() -> dictionary.Dic:
     poem_list = []
     poem_id = 0
@@ -14,16 +15,16 @@ def init_dictionary() -> dictionary.Dic:
 
 if __name__ == '__main__':
     dic = init_dictionary()
+    print("测试一：")
     print("东、南 并集：" + str(dic.union('东', '南')))
     print("东、南 交集：" + str(dic.intersection('东', '南')))
-    print("东、南 AND NOT" + str(dic.and_not('东', '南')))
+    print("东、南 AND NOT：" + str(dic.and_not('东', '南')))
     print("东、南、人 并集：" + str(dic.union('东', '南', '人')))
     print("东、南、人 交集：" + str(dic.intersection('东', '南', '人')))
-
+    print("测试二：")
     print("明、月 并集：" + str(dic.union('明', '月')))
     print("明、月 交集：" + str(dic.intersection('明', '月')))
-    print("明、月 AND NOT" + str(dic.and_not('明', '月')))
+    print("明、月 AND NOT：" + str(dic.and_not('明', '月')))
     print("明、月、人 并集：" + str(dic.union('明', '月', '人')))
     print("明、月、人 交集：" + str(dic.intersection('明', '月', '人')))
-
     print("done")

@@ -5,6 +5,10 @@ from collections import deque
 
 
 class Poem:
+    """
+    Poem 类
+    成员变量： title, author, content(内容), term_dict(词频字典)
+    """
     def __init__(self, poem: str, poem_id: int):
         self.id = poem_id
         poem = poem.splitlines()
@@ -15,6 +19,7 @@ class Poem:
             self.content.pop()
         self.term_dict = self.__generate_term_dict()
 
+    # 生成词频字典
     def __generate_term_dict(self):
         term_dict = {}
         for sentence in self.content:
@@ -27,25 +32,36 @@ class Poem:
 
 
 class Term:
+    """
+    Term 类
+    成员变量: term, posting_list, frequency
+    """
     def __init__(self, term, poem_id, frequency):
         self.posting_list = deque()
         self.term = term
         self.posting_list.append((poem_id, frequency))
         self.frequency = frequency
 
+    # 更新posting_list和frequency
     def update(self, poem_id, frequency):
         self.frequency += frequency
         self.posting_list.append((poem_id, frequency))
 
+    # 获取term所在文档的个数
     def get_doc_num(self):
         return len(self.posting_list)
 
 
 class Dic:
+    """
+    Dic 类
+    成员变量: doc_list(文档列表), term_list(term列表)
+    """
     def __init__(self, poem_list: list):
         self.doc_list = poem_list
         self.term_list = self.__generate_term_dict()
 
+    # 根据doc_list生成term_list
     def __generate_term_dict(self):
         term_dict = {}
         for poem in self.doc_list:
