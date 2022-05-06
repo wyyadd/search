@@ -18,19 +18,8 @@ class Poem:
         self.content = re.split(r'[.。,，!！?？(（）):：;；、’“"”《》]', poem[2])
         if len(self.content[-1]) == 0:
             self.content.pop()
-        self.content_term_dict = self.__generate_term_dict()
+        self.content_term_dict = util.generate_term_dict(self.content)
         self.title_term_dict = util.generate_term_dict([self.title])
-
-    # 生成词频字典
-    def __generate_term_dict(self):
-        term_dict = {}
-        for sentence in self.content:
-            for c in sentence:
-                if c in term_dict:
-                    term_dict[c] += 1
-                else:
-                    term_dict[c] = 1
-        return term_dict
 
 
 class Term:

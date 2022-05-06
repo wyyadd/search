@@ -12,6 +12,7 @@ def read_data() -> list:
     return poem_str
 
 
+# 生成词频字典
 def generate_term_dict(text: list):
     term_dict = {}
     for sentence in text:
