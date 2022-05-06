@@ -17,13 +17,13 @@ if __name__ == '__main__':
     print("东、南 并集：" + str(dic.union('东', '南')))
     print("东、南 交集：" + str(dic.intersection('东', '南')))
     print("东、南 AND NOT" + str(dic.and_not('东', '南')))
-    print("东、南、大 并集：" + str(dic.union('东', '南', '大')))
-    print("东、南、大 交集：" + str(dic.intersection('东', '南', '大')))
+    print("东、南、人 并集：" + str(dic.union('东', '南', '人')))
+    print("东、南、人 交集：" + str(dic.intersection('东', '南', '人')))
 
     print("明、月 并集：" + str(dic.union('明', '月')))
     print("明、月 交集：" + str(dic.intersection('明', '月')))
     print("明、月 AND NOT" + str(dic.and_not('明', '月')))
-    print("明、月、花 并集：" + str(dic.union('明', '月', '花')))
-    print("明、月、花 交集：" + str(dic.intersection('明', '月', '花')))
+    print("明、月、人 并集：" + str(dic.union('明', '月', '人')))
+    print("明、月、人 交集：" + str(dic.intersection('明', '月', '人')))
 
     print("done")

@@ -10,7 +10,7 @@ class Poem:
         poem = poem.splitlines()
         self.title = poem[0]
         self.author = poem[1]
-        self.content = re.split(r'[.。,，!！?？(（）):：;；、’“"”]', poem[2])
+        self.content = re.split(r'[.。,，!！?？(（）):：;；、’“"”《》]', poem[2])
         if len(self.content[-1]) == 0:
             self.content.pop()
         self.term_dict = self.__generate_term_dict()
@@ -56,8 +56,8 @@ class Dic:
                     term_dict[term] = Term(term, poem.id, fre)
         return term_dict
 
-    """输入为N个关键词，返回为两个关键词对应链表的交集"""
-    def intersection(self, *term) -> deque:
+    """输入为N个关键词，返回为两个关键词对应链表的并集"""
+    def union(self, *term) -> deque:
         ans = deque()
         candidates_list = []
         for t in term:
@@ -68,11 +68,11 @@ class Dic:
         list.sort(candidates_list, key=len, reverse=True)
         ans = candidates_list[0]
         for p in candidates_list[1:]:
-            ans = util.and2(ans, p)
+            ans = util.or2(ans, p)
         return ans
 
-    """输入为N个关键词，返回为两个关键词对应链表的并集"""
-    def union(self, *term) -> deque:
+    """输入为N个关键词，返回为两个关键词对应链表的交集"""
+    def intersection(self, *term) -> deque:
         ans = deque()
         candidates_list = []
         for t in term:
@@ -83,7 +83,7 @@ class Dic:
         list.sort(candidates_list, key=len)
         ans = candidates_list[0]
         for p in candidates_list[1:]:
-            ans = util.or2(ans, p)
+            ans = util.and2(ans, p)
         return ans
 
     """输入为两个关键词，返回为两个关键词对应链表的and not"""
