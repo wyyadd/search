@@ -71,12 +71,11 @@ class Dic:
                     title_term_dict[term] = Term(term, poem.id, fre)
         return content_term_dict, title_term_dict
 
-
     """输入为N个关键词，返回为两个关键词对应链表的并集，并综合标题索引和内容索引，结果按照分数从大到小排序"""
 
     def union(self, *term) -> deque:
-        res=[]
-        for term_list in [self.content_term_list,self.title_term_list]:
+        res = []
+        for term_list in [self.content_term_list, self.title_term_list]:
             ans = deque()
             candidates_list = []
             for t in term:
@@ -88,7 +87,8 @@ class Dic:
                 for p in candidates_list[1:]:
                     ans = util.or2(ans, p)
             res.append(ans)
-        return util.merge_content_title(res[0],res[1])
+        return util.merge_content_title(res[0], res[1])
+
     """输入为N个关键词，返回为两个关键词对应链表的交集，并综合标题索引和内容索引，结果按照分数从大到小排序"""
 
     def intersection(self, *term) -> deque:
@@ -102,7 +102,7 @@ class Dic:
                     break
                 else:
                     candidates_list.append(term_list[t].posting_list)
-            if len(candidates_list)>0:
+            if len(candidates_list) > 0:
                 list.sort(candidates_list, key=len)
                 ans = candidates_list[0]
                 for p in candidates_list[1:]:
@@ -115,14 +115,14 @@ class Dic:
     def and_not(self, s1, s2) -> deque:
         res = []
         for term_list in [self.content_term_list, self.title_term_list]:
-            ans=deque()
+            ans = deque()
             if s1 in self.content_term_list.keys():
                 if s2 not in self.content_term_list.keys():
-                    ans=term_list[s1].posting_list
+                    ans = term_list[s1].posting_list
                 else:
                     p1 = self.content_term_list[s1].posting_list
                     p2 = self.content_term_list[s2].posting_list
-                    ans= util.and_not2(p1, p2)
+                    ans = util.and_not2(p1, p2)
             res.append(ans)
         return util.merge_content_title(res[0], res[1])
     # def union(self, s1, s2) -> deque:

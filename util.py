@@ -81,17 +81,19 @@ def and_not2(p1, p2):
             i += 1
             j += 1
     return res
-def merge_content_title(content_list,title_list)->deque:
-    '''合并内容列表和标题列表，按照0.4：0.6的权重，并将结果分数按从大到小排序'''
-    res=deque()
+
+
+def merge_content_title(content_list, title_list) -> deque:
+    """合并内容列表和标题列表，按照0.4：0.6的权重，并将结果分数按从大到小排序"""
+    res = []
     i = 0
     j = 0
-    while i < len(content_list) and j < len( title_list):
+    while i < len(content_list) and j < len(title_list):
         if content_list[i][0] < title_list[j][0]:
-            res.append((content_list[i][0],0.4))
+            res.append((content_list[i][0], 0.4))
             i += 1
         elif content_list[i][0] > title_list[j][0]:
-            res.append((title_list[j][0],0.6))
+            res.append((title_list[j][0], 0.6))
             j += 1
         else:
             res.append((title_list[j][0], 1))
@@ -99,8 +101,8 @@ def merge_content_title(content_list,title_list)->deque:
             j += 1
     if i == len(content_list):
         for m in range(j, len(title_list)):
-            res.append((title_list[m][0],0.6))
+            res.append((title_list[m][0], 0.6))
     else:
         for m in range(i, len(content_list)):
-            res.append((content_list[m][0],0.4))
-    return sorted(res,key=lambda value: value[1],reverse=True)#按照结果分数从大到小排序
+            res.append((content_list[m][0], 0.4))
+    return deque(sorted(res, key=lambda value: value[1], reverse=True))  # 按照结果分数从大到小排序
