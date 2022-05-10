@@ -3,7 +3,6 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import requests
-import re
 from bs4 import BeautifulSoup
 import os
 def print_hi(name):
@@ -58,5 +57,5 @@ def write2txt(datas,dirname='dictionary'):
 if __name__ == '__main__':
     links=getall_link()#获取所有古诗文链接
     datas=getdata(links)#获取所有古诗文数据
-    write2txt(datas)#写入txt文件
+    write2txt(datas)#写入txt文件,313个文件
 

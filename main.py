@@ -1,4 +1,6 @@
 # coding=utf-8
+import re
+
 import util
 import dictionary
 
@@ -11,8 +13,20 @@ def init_dictionary() -> dictionary.Dic:
         poem_list.append(dictionary.Poem(p, poem_id))
         poem_id += 1
     return dictionary.Dic(poem_list)
-
-
+def interface():
+    while(1):
+        keys=input("请输入查询语句:")
+        print(keys)
+        if 'andnot' in keys:
+            keys = keys.split('andnot')
+            print(keys)
+            print("result" + str(dic.and_not(*keys)))
+        elif 'and' in keys:
+            keys=keys.split('and')
+            print("result:" + str(dic.intersection(*keys)))
+        elif 'or' in keys:
+            keys=keys.split('or')
+            print("result:" + str(dic.union(*keys)))
 if __name__ == '__main__':
     dic = init_dictionary()
     print("测试一：")
@@ -28,3 +42,5 @@ if __name__ == '__main__':
     print("明、月、人 并集：" + str(dic.union('明', '月', '人')))
     print("明、月、人 交集：" + str(dic.intersection('明', '月', '人')))
     print("done")
+    interface()
+
