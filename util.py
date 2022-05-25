@@ -1,6 +1,5 @@
 # coding=utf-8
 import os
-from collections import deque
 
 
 # 从dataset文件夹中读取诗句
@@ -26,7 +25,7 @@ def generate_term_dict(text: list):
 
 def and2(p1, p2):
     """针对两个链表的and"""
-    res = deque()
+    res = []
     i = 0
     j = 0
     while i < len(p1) and j < len(p2):
@@ -40,9 +39,10 @@ def and2(p1, p2):
             j += 1
     return res
 
-def or2_score(p1,p2):
-    '''带分数的链表的合并'''
-    res = deque()
+
+def or2_score(p1, p2):
+    """带分数的链表的合并"""
+    res = []
     i = 0
     j = 0
     while i < len(p1) and j < len(p2):
@@ -53,7 +53,7 @@ def or2_score(p1,p2):
             res.append(p2[j])
             j += 1
         else:
-            res.append((p1[i][0], min(p1[i][1] + p2[j][1],1)))
+            res.append((p1[i][0], min(p1[i][1] + p2[j][1], 1)))
             i += 1
             j += 1
     if i == len(p1):
@@ -63,9 +63,11 @@ def or2_score(p1,p2):
         for m in range(i, len(p1)):
             res.append(p1[m])
     return res
+
+
 def or2(p1, p2):
     """针对两个链表的or"""
-    res = deque()
+    res = []
     i = 0
     j = 0
     while i < len(p1) and j < len(p2):
@@ -107,7 +109,7 @@ def and_not2(p1, p2):
     return res
 
 
-def merge_content_title(content_list, title_list) -> deque:
+def merge_content_title(content_list, title_list):
     """合并内容列表和标题列表，按照0.4：0.6的权重，并将结果分数按从大到小排序"""
     res = []
     i = 0
@@ -138,5 +140,5 @@ def merge_content_title(content_list, title_list) -> deque:
         else:
             for m in range(i, len(content_list)):
                 res.append((content_list[m][0], 0.4))
-    # return deque(sorted(res, key=lambda value: value[1], reverse=True))  # 按照结果分数从大到小排序
-    return res#按照docid排序，最后统一按分数排序
+    # return sorted(res, key=lambda value: value[1], reverse=True)  # 按照结果分数从大到小排序
+    return res  # 按照docid排序，最后统一按分数排序
