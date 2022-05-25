@@ -70,6 +70,15 @@ class Dic:
                 else:
                     title_term_dict[term] = Term(term, poem.id, fre)
         return content_term_dict, title_term_dict
+    def getlist(self,term):
+        '''根据term，返回内容索引和标题索引的加权和'''
+        content_list=None
+        title_list=None
+        if term in self.content_term_list.keys():
+            content_list=self.content_term_list[term].posting_list
+        if term in self.title_term_list.keys():
+            title_list=self.title_term_list[term].posting_list
+        return util.merge_content_title(content_list,title_list)
 
     """输入为N个关键词，返回为两个关键词对应链表的并集，并综合标题索引和内容索引，结果按照分数从大到小排序"""
 
