@@ -94,7 +94,7 @@ def and_not2(p1, p2):
     """针对两个链表的and-not"""
     if p2 is None:
         return p1
-    res = deque()
+    res = []
     i = 0
     j = 0
     while i < len(p1) and j < len(p2):
