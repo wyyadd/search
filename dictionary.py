@@ -86,16 +86,18 @@ class Dic:
         return content_term_dict, title_term_dict
 
     def getlist(self, term):
-        """根据term，返回内容索引和标题索引的加权和"""
+        """根据term，返回内容索引和标题索引,均按docid排序"""
         content_list = None
         title_list = None
         if term in self.content_term_list.keys():
             content_list = self.content_term_list[term].posting_list
         if term in self.title_term_list.keys():
             title_list = self.title_term_list[term].posting_list
-        return util.merge_content_title(content_list, title_list)
+        if content_list is not None:
+            content_list=sorted(content_list, key=lambda value: value[0], reverse=False)
+        return content_list,title_list
 
-    """输入为N个关键词，返回为两个关键词对应链表的并集，并综合标题索引和内容索引，结果按照分数从大到小排序"""
+    """输入为N个关键词，返回为两个关键词对应链表的并集，并综合标题索引和内容索引，结果 按照分数从大到小排序"""
 
     def union(self, *term):
         res = []
@@ -173,3 +175,34 @@ class Dic:
             scores[doc_id] /= length[doc_id]
         # return top 5
         return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    def union_title(self, *term):
+        '''仅针对标题索引的bool查询'''
+        res = []
+        ans = deque()
+        candidates_list = []
+        for t in term:
+            if t in self.title_term_list:
+                candidates_list.append(self.content_term_list[t].posting_list)
+        if len(candidates_list) != 0:
+            list.sort(candidates_list, key=len, reverse=True)
+            ans = candidates_list[0]
+            for p in candidates_list[1:]:
+                ans = util.or2(ans, p)
+        return ans
+    def intersection_title(self, *term):
+        res = []
+        ans = deque()
+        candidates_list = []
+        for t in term:
+            if t not in self.title_term_list:
+                candidates_list.clear()
+                break
+            else:
+                candidates_list.append(self.title_term_list[t].posting_list)
+        if len(candidates_list) > 0:
+            list.sort(candidates_list, key=len)
+            ans = candidates_list[0]
+            for p in candidates_list[1:]:
+                ans = util.and2(ans, p)
+        return ans
