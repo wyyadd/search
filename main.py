@@ -8,9 +8,8 @@ import dictionary
 def parser():
     keys = input("请输入查询语句:")
     pattens = keys.split('or')
-    res = None
-    title_res=None
-    content_res=None
+    title_res = None
+    content_res = None
     for pat in pattens:
         temps = pat.split('and')
         andterm = []
@@ -23,24 +22,24 @@ def parser():
             else:
                 andterm.append(temp)
         content_ans = dic.vector_search(*andterm)
-        content_ans= sorted(content_ans, key=lambda value: value[0], reverse=False)
-        title_ans=dic.intersection_title(*andterm)
+        content_ans = sorted(content_ans, key=lambda value: value[0], reverse=False)
+        title_ans = dic.intersection_title(*andterm)
         # print(content_ans)
         if len(notterm) > 0:
             for term in notterm:
-                content_,title_=dic.getlist(term)
+                content_, title_ = dic.getlist(term)
                 content_ans = util.and_not2(content_ans, content_)
-                title_ans=util.and_not2(title_ans,title_)
+                title_ans = util.and_not2(title_ans, title_)
         if content_res is None:
-            content_res=content_ans
+            content_res = content_ans
         else:
             content_res = util.or2_score(content_res, content_ans)
         if title_res is None:
-            title_res=title_ans
+            title_res = title_ans
         else:
-            title_res=util.or2_score(title_res, title_ans)
+            title_res = util.or2_score(title_res, title_ans)
         # print(content_res)
-    res=util.merge_content_title(content_res,title_res)#对标题和内容查询到的结果进行合并
+    res = util.merge_content_title(content_res, title_res)  # 对标题和内容查询到的结果进行合并
     # res = sorted(res, key=lambda value: value[1], reverse=True)
     print(str(res))
 

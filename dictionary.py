@@ -94,12 +94,11 @@ class Dic:
         if term in self.title_term_list.keys():
             title_list = self.title_term_list[term].posting_list
         if content_list is not None:
-            content_list=sorted(content_list, key=lambda value: value[0], reverse=False)
-        return content_list,title_list
-
-    """输入为N个关键词，返回为两个关键词对应链表的并集，并综合标题索引和内容索引，结果 按照分数从大到小排序"""
+            content_list = sorted(content_list, key=lambda value: value[0], reverse=False)
+        return content_list, title_list
 
     def union(self, *term):
+        """输入为N个关键词，返回为两个关键词对应链表的并集，并综合标题索引和内容索引，结果 按照分数从大到小排序"""
         res = []
         for term_list in [self.content_term_list, self.title_term_list]:
             ans = deque()
@@ -115,9 +114,8 @@ class Dic:
             res.append(ans)
         return util.merge_content_title(res[0], res[1])
 
-    """输入为N个关键词，返回为两个关键词对应链表的交集，并综合标题索引和内容索引，结果按照分数从大到小排序"""
-
     def intersection(self, *term):
+        """输入为N个关键词，返回为两个关键词对应链表的交集，并综合标题索引和内容索引，结果按照分数从大到小排序"""
         res = []
         for term_list in [self.content_term_list, self.title_term_list]:
             ans = deque()
@@ -136,9 +134,8 @@ class Dic:
             res.append(ans)
         return util.merge_content_title(res[0], res[1])
 
-    """输入为两个关键词，返回为两个关键词对应链表的and not，并综合标题索引和内容索引，结果按照分数从大到小排序"""
-
     def and_not(self, s1, s2) -> deque:
+        """输入为两个关键词，返回为两个关键词对应链表的and not，并综合标题索引和内容索引，结果按照分数从大到小排序"""
         res = []
         for term_list in [self.content_term_list, self.title_term_list]:
             ans = deque()
@@ -152,11 +149,8 @@ class Dic:
             res.append(ans)
         return util.merge_content_title(res[0], res[1])
 
-    """向量搜索"""
     def vector_search(self, *term):
-        term = list(term)
-        # 按照idf大小降序排序
-        list.sort(term, key=lambda x: self.content_term_list[x].idf, reverse=True)
+        """向量搜索"""
         # key: docId, value: score
         scores = {}
         # key: docId, value: doc length
@@ -177,9 +171,8 @@ class Dic:
         return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
 
     def union_title(self, *term):
-        '''仅针对标题索引的bool查询'''
-        res = []
-        ans = deque()
+        """仅针对标题索引的bool查询"""
+        ans = []
         candidates_list = []
         for t in term:
             if t in self.title_term_list:
@@ -190,9 +183,9 @@ class Dic:
             for p in candidates_list[1:]:
                 ans = util.or2(ans, p)
         return ans
+
     def intersection_title(self, *term):
-        res = []
-        ans = deque()
+        ans = []
         candidates_list = []
         for t in term:
             if t not in self.title_term_list:
