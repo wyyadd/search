@@ -121,17 +121,17 @@ def merge_content_title(content_list, title_list):
             res.append((title_list[i][0], 0.6))
     elif title_list is None:
         for i in range(len(content_list)):
-            res.append((content_list[i][0], 0.4*content_list[i][1]))
+            res.append((content_list[i][0], 0.4 * content_list[i][1]))
     else:
         while i < len(content_list) and j < len(title_list):
             if content_list[i][0] < title_list[j][0]:
-                res.append((content_list[i][0], 0.4*content_list[i][1]))
+                res.append((content_list[i][0], 0.4 * content_list[i][1]))
                 i += 1
             elif content_list[i][0] > title_list[j][0]:
                 res.append((title_list[j][0], 0.6))
                 j += 1
             else:
-                res.append((title_list[j][0], 0.6+0.4*content_list[i][1]))
+                res.append((title_list[j][0], 0.6 + 0.4 * content_list[i][1]))
                 i += 1
                 j += 1
         if i == len(content_list):
@@ -139,6 +139,6 @@ def merge_content_title(content_list, title_list):
                 res.append((title_list[m][0], 0.6))
         else:
             for m in range(i, len(content_list)):
-                res.append((content_list[m][0], 0.4*content_list[m][1]))
+                res.append((content_list[m][0], 0.4 * content_list[m][1]))
     return sorted(res, key=lambda value: value[1], reverse=True)  # 按照结果分数从大到小排序
     # return res  # 按照docid排序，最后统一按分数排序
