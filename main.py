@@ -1,6 +1,4 @@
 # coding=utf-8
-import re
-
 import util
 import dictionary
 
@@ -47,10 +45,8 @@ def parser():
 # 初始化字典函数
 def init_dictionary() -> dictionary.Dic:
     poem_list = []
-    poem_id = 0
-    for p in util.read_data():
+    for poem_id, p in util.read_data().items():
         poem_list.append(dictionary.Poem(p, poem_id))
-        poem_id += 1
     return dictionary.Dic(poem_list)
 
 
@@ -71,6 +67,7 @@ def interface():
 
 if __name__ == '__main__':
     dic = init_dictionary()
+    print(dic.rsv('明月', '人'))
     parser()
     # print(dic.getlist('明'))
     # print(dic.title_term_list['明'].posting_list)

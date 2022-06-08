@@ -1,6 +1,6 @@
 # coding=utf-8
 import re
-
+import math
 from typing import List
 
 import util
@@ -149,30 +149,6 @@ class Dic:
             res.append(ans)
         return util.merge_content_title(res[0], res[1])
 
-    def vector_search(self, *term):
-        """向量搜索"""
-        term = list(term)
-        # 按照idf大小降序排序
-        list.sort(term, key=lambda x: self.content_term_list[x].idf, reverse=True)
-        # key: docId, value: score
-        scores = {}
-        # key: docId, value: doc length
-        length = {}
-        for doc in self.doc_list:
-            length[doc.id] = sum(doc.content_term_dict.values())
-        for t in term:
-            # s : (docId, tf)
-            for s in self.content_term_list[t].posting_list[:20]:
-                # wf_td = tf * idf
-                if s[0] in scores:
-                    scores[s[0]] += s[1] * self.content_term_list[t].idf
-                else:
-                    scores[s[0]] = s[1] * self.content_term_list[t].idf
-        for doc_id in scores.keys():
-            scores[doc_id] /= length[doc_id]
-        # return top 5
-        return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
-
     def union_title(self, *term):
         """仅针对标题索引的bool查询"""
         ans = []
@@ -202,3 +178,44 @@ class Dic:
             for p in candidates_list[1:]:
                 ans = util.and2(ans, p)
         return ans
+
+    def vector_search(self, *term):
+        """向量搜索"""
+        term = list(term)
+        # 按照idf大小降序排序
+        list.sort(term, key=lambda x: self.content_term_list[x].idf, reverse=True)
+        # key: docId, value: score
+        scores = {}
+        # key: docId, value: doc length
+        length = {}
+        for doc in self.doc_list:
+            length[doc.id] = sum(doc.content_term_dict.values())
+        for t in term:
+            # s : (docId, tf)
+            idf = self.content_term_list[t].idf
+            for s in self.content_term_list[t].posting_list[:20]:
+                # wf_td = tf * idf
+                if s[0] in scores:
+                    scores[s[0]] += s[1] * idf
+                else:
+                    scores[s[0]] = s[1] * idf
+        for doc_id in scores.keys():
+            scores[doc_id] /= length[doc_id]
+        # return top 5
+        return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    def rsv(self, *term):
+        # key: docId, value: score
+        scores = {}
+        for t in term:
+            idf = float(self.content_term_list[t].idf)
+            ut = 1 / idf
+            pt = 1 / 3 + (2 / 3) * (1 / idf)
+            ct = math.log2(pt / (1 - pt)) + math.log2((1 - ut) / ut)
+            # s : (docId, tf)
+            for s in self.content_term_list[t].posting_list:
+                if s[0] in scores:
+                    scores[s[0]] += ct
+                else:
+                    scores[s[0]] = ct
+        return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]

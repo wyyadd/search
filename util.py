@@ -1,13 +1,14 @@
 # coding=utf-8
 import os
+import jieba
 
 
 # 从dataset文件夹中读取诗句
-def read_data() -> list:
-    poem_str = []
+def read_data() -> dict:
+    poem_str = {}
     for s in os.listdir("./dataset"):
         with open("./dataset/" + s, 'r', encoding='utf8') as file:
-            poem_str.append(file.read())
+            poem_str[int(s.split('-')[0])] = (file.read())
     return poem_str
 
 
@@ -15,7 +16,7 @@ def read_data() -> list:
 def generate_term_dict(text: list):
     term_dict = {}
     for sentence in text:
-        for c in sentence:
+        for c in jieba.cut_for_search(sentence):
             if c in term_dict:
                 term_dict[c] += 1
             else:
