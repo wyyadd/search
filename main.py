@@ -67,8 +67,9 @@ def interface():
 
 if __name__ == '__main__':
     dic = init_dictionary()
-    print(dic.rsv('明月', '人'))
-    parser()
+    # print(dic.content_biterm_list['华夏'].posting_list)
+    print(dic.bigram_mle('唐诗三百首'))
+    # parser()
     # print(dic.getlist('明'))
     # print(dic.title_term_list['明'].posting_list)
     # print(dic.content_term_list['明'].posting_list)

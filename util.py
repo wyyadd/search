@@ -16,13 +16,28 @@ def read_data() -> dict:
 def generate_term_dict(text: list):
     term_dict = {}
     for sentence in text:
-        for c in jieba.cut_for_search(sentence):
+        # for c in jieba.cut_for_search(sentence):
+        for c in sentence:
             if c in term_dict:
                 term_dict[c] += 1
             else:
                 term_dict[c] = 1
     return term_dict
-
+def generate_biterm_dict(text: list):
+    term_dict = {}
+    for sentence in text:
+        # for c in jieba.cut_for_search(sentence):
+        if(len(sentence)==0):
+            continue
+        first=sentence[0]
+        for c in sentence[1:]:
+            word=first+c
+            first=c
+            if word in term_dict:
+                term_dict[word] += 1
+            else:
+                term_dict[word] = 1
+    return term_dict
 
 def and2(p1, p2):
     """针对两个链表的and"""
