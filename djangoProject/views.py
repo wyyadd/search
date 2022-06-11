@@ -11,5 +11,6 @@ def index(request):
 def search(request):
     request.encoding = "utf-8"
     query = request.GET['query']
-    result = searchEngine.search(query, dic)
+    print(request.GET['select-query'])
+    result = searchEngine.search(query, dic, False)
     return render(request, "index.html", {"poem_list": result})

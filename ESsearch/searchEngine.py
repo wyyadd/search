@@ -13,8 +13,7 @@ def init_dictionary() -> dictionary.Dic:
     return dictionary.Dic(poem_list)
 
 
-def parser(dic):
-    keys = input("请输入查询语句:")
+def parser(dic, keys):
     pattens = keys.split('or')
     title_res = None
     content_res = None
@@ -52,7 +51,7 @@ def parser(dic):
     print(str(res))
 
 
-def search(query, dic) -> List[dictionary.Poem]:
+def search(query, dic, advance) -> List[dictionary.Poem]:
     ans = []
     for docId in dic.unigram_mle([char for char in query]):
         ans.append(dic.doc_list[docId[0]])

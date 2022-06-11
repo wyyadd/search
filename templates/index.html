@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>ES组の搜索引擎</title>
@@ -18,6 +17,13 @@
 <h1 style="text-align:center">唐诗搜索📖</h1>
 <form action="/search/" method="get">
     <div style="text-align: center">
+        <label>
+            <select name="select-query" style="font-size: 24px">
+                <option>bool</option>
+                <option>pro1</option>
+                <option>pro2</option>
+            </select>
+        </label>
         <label>
             <input type="text" name="query" maxlength="20" style="font-size: 24px">
             <input type="submit" value="搜索" style="font-size: 20px; color: cadetblue">
