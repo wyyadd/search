@@ -46,13 +46,19 @@ def parser(dic, keys):
         else:
             title_res = util.or2_score(title_res, title_ans)
         # print(content_res)
-    res = util.merge_content_title(content_res, title_res)  # 对标题和内容查询到的结果进行合并
+    return util.merge_content_title(content_res, title_res)  # 对标题和内容查询到的结果进行合并
     # res = sorted(res, key=lambda value: value[1], reverse=True)
-    print(str(res))
+    # print(str(res))
 
 
-def search(query, dic, advance) -> List[dictionary.Poem]:
-    ans = []
-    for docId in dic.unigram_mle([char for char in query]):
-        ans.append(dic.doc_list[docId[0]])
-    return ans
+def search(query, dic, search_type) -> List[dictionary.Poem]:
+    poem_list = []
+    if search_type == "一元MLE检索":
+        ans = dic.unigram_mle([char for char in query])
+    elif search_type == "二元MLE检索":
+        ans = dic.bigram_mle([char for char in query])
+    else:
+        ans = parser(dic, query)
+    for doc in ans:
+        poem_list.append(dic.doc_list[doc[0]])
+    return poem_list
