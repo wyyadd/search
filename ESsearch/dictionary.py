@@ -1,9 +1,9 @@
 # coding=utf-8
 import re
 import math
-from typing import List
+from typing import List, Dict
 
-import util
+from ESsearch import util
 from collections import deque
 
 
@@ -18,11 +18,12 @@ class Poem:
         poem = poem.splitlines()
         self.title = poem[0]
         self.author = poem[1]
-        self.content = re.split(r'[.。,，!！?？(（）):：;；、’“"”《》]', poem[2])
+        self.raw_content = poem[2]
+        self.content = re.split(r'[.。,，!！?？(（）):：;；、’“"”《》]', self.raw_content)
         if len(self.content[-1]) == 0:
             self.content.pop()
         self.content_term_dict = util.generate_term_dict(self.content)
-        self.conten_biterm_dict=util.generate_biterm_dict(self.content)
+        self.content_biterm_dict = util.generate_biterm_dict(self.content)
         self.title_term_dict = util.generate_term_dict([self.title])
 
 
@@ -59,26 +60,28 @@ class Dic:
     成员变量: doc_list(文档列表), term_list(term列表)
     """
 
-    def __init__(self, poem_list: List[Poem]):
+    def __init__(self, poem_list: Dict[int, Poem]):
         self.doc_list = poem_list
-        self.content_term_list, self.title_term_list ,self.content_biterm_list= self.__generate_term_list()
-        self.doc_info,self.total_count=self.__generate_doc_info()
+        self.content_term_list, self.title_term_list, self.content_biterm_list = self.__generate_term_list()
+        self.doc_info, self.total_count = self.__generate_doc_info()
+        print("初始化搜索引擎完成\n")
 
     def __generate_doc_info(self):
-        #生成doc_info和总的字长 key为docID v为内容的长度
-        doc_dict={}
-        total=0
-        for poem in self.doc_list:
-            doc_dict[poem.id]=len(poem.content_term_dict)
-            total+=len(poem.content_term_dict)
-        return doc_dict,total
+        # 生成doc_info和总的字长 key为docID v为内容的长度
+        doc_dict = {}
+        total = 0
+        for poem in self.doc_list.values():
+            doc_dict[poem.id] = len(poem.content_term_dict)
+            total += len(poem.content_term_dict)
+        return doc_dict, total
+
     # 根据doc_list生成term_list
     def __generate_term_list(self):
         content_term_dict = {}
         title_term_dict = {}
         content_biterm_dict = {}
         # 生成term_list
-        for poem in self.doc_list:
+        for poem in self.doc_list.values():
             for term, fre in poem.content_term_dict.items():
                 if term in content_term_dict:
                     content_term_dict[term].update(poem.id, fre)
@@ -89,7 +92,7 @@ class Dic:
                     title_term_dict[term].update(poem.id, fre)
                 else:
                     title_term_dict[term] = Term(term, poem.id, fre)
-            for term, fre in poem.conten_biterm_dict.items():
+            for term, fre in poem.content_biterm_dict.items():
                 if term in content_biterm_dict:
                     content_biterm_dict[term].update(poem.id, fre)
                 else:
@@ -99,7 +102,7 @@ class Dic:
             value.generate_idf(len(self.doc_list))
         for key, value in title_term_dict.items():
             value.generate_idf(len(self.doc_list))
-        return content_term_dict, title_term_dict,content_biterm_dict
+        return content_term_dict, title_term_dict, content_biterm_dict
 
     def getlist(self, term):
         """根据term，返回内容索引和标题索引,均按docid排序"""
@@ -204,7 +207,7 @@ class Dic:
         scores = {}
         # key: docId, value: doc length
         length = {}
-        for doc in self.doc_list:
+        for doc in self.doc_list.values():
             length[doc.id] = sum(doc.content_term_dict.values())
         for t in term:
             # s : (docId, tf)
@@ -220,7 +223,7 @@ class Dic:
         # return top 5
         return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
 
-    def rsv(self, *term):
+    def rsv(self, term):
         # key: docId, value: score
         scores = {}
         for t in term:
@@ -236,62 +239,62 @@ class Dic:
                     scores[s[0]] = ct
         return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
 
-    def unigram_mle(self,term):
-        res={}
-        lamda=0.5
+    def unigram_mle(self, term):
+        res = {}
+        lamda = 0.5
         for t in term:
-            if (t not in self.content_term_list.keys()):
+            if t not in self.content_term_list.keys():
                 continue
-            for docid,_ in self.content_term_list[t].posting_list:
-                res[docid]=1
+            for docid, _ in self.content_term_list[t].posting_list:
+                res[docid] = 1
         for t in term:
-            if(t  not in self.content_term_list.keys()):
+            if t not in self.content_term_list.keys():
                 continue
-            total=self.content_term_list[t].frequency
+            total = self.content_term_list[t].frequency
             temp_dic = {}
             for did, freq in self.content_term_list[t].posting_list:
                 temp_dic[did] = freq
-            for docid,_ in res.items():
+            for docid, _ in res.items():
                 if docid in temp_dic.keys():
-                    res[docid] *= (lamda * temp_dic[docid] / self.doc_info[docid] + (1 - lamda) * total / self.total_count)
+                    res[docid] *= (
+                            lamda * temp_dic[docid] / self.doc_info[docid] + (1 - lamda) * total / self.total_count)
                 else:
-                    res[docid]*=(1 - lamda) * total / self.total_count
+                    res[docid] *= (1 - lamda) * total / self.total_count
         return sorted(res.items(), key=lambda x: x[1], reverse=True)[:5]
 
     def bigram_mle(self, term):
-        res={}
-        lamda=0.5
-        first=term[0]
+        res = {}
+        lamda = 0.5
+        first = term[0]
         # print(term)
         for t in term:
-            if (t not in self.content_term_list.keys()):
+            if t not in self.content_term_list.keys():
                 continue
-            for docid,_ in self.content_term_list[t].posting_list:
-                res[docid]=1
+            for docid, _ in self.content_term_list[t].posting_list:
+                res[docid] = 1
         for t in term[1:]:
-            word=first+t
+            word = first + t
             if first not in self.content_term_list.keys():
-                first=t
+                first = t
                 continue
 
-            total=0  if first not in self.content_term_list.keys() else self.content_term_list[first].frequency
-            bi_total=0 if word not in self.content_biterm_list.keys() else self.content_biterm_list[word].frequency
-            j=0
+            total = 0 if first not in self.content_term_list.keys() else self.content_term_list[first].frequency
+            bi_total = 0 if word not in self.content_biterm_list.keys() else self.content_biterm_list[word].frequency
             uni_dic = {}
-            bi_dic={}
+            bi_dic = {}
             for did, freq in self.content_term_list[first].posting_list:
                 uni_dic[did] = freq
             if word in self.content_biterm_list.keys():
-                for did,freq in self.content_biterm_list[word].posting_list:#有问题
-                    bi_dic[did]=freq
+                for did, freq in self.content_biterm_list[word].posting_list:  # 有问题
+                    bi_dic[did] = freq
             for docid in res.keys():
-                uni=(1 - lamda) * total / self.total_count
+                uni = (1 - lamda) * total / self.total_count
                 bi = (1 - lamda) * bi_total / self.total_count
                 if docid in uni_dic.keys():
                     uni += lamda * uni_dic[docid] / self.doc_info[docid]
                 if docid in bi_dic.keys():
-                    bi+=lamda * bi_dic[docid]/self.doc_info[docid]
-                res[docid]*=0.4*uni+0.6*bi
+                    bi += lamda * bi_dic[docid] / self.doc_info[docid]
+                res[docid] *= 0.4 * uni + 0.6 * bi
             first = t
             # print(sorted(res.items(), key=lambda x: x[1], reverse=True)[:5])
         return sorted(res.items(), key=lambda x: x[1], reverse=True)[:5]

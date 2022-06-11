@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>ES组の搜索引擎</title>
+</head>
+<style>
+    body {
+        background-image: url('{% static "images/background.jpg" %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        vertical-align: middle;
+    }
+</style>
+<body>
+<h1 style="text-align:center">唐诗搜索📖</h1>
+<form action="/search/" method="get">
+    <div style="text-align: center">
+        <label>
+            <input type="text" name="query" maxlength="20" style="font-size: 24px">
+            <input type="submit" value="搜索" style="font-size: 20px; color: cadetblue">
+        </label>
+    </div>
+    {% for poem in poem_list %}
+        <h3 style="text-align: center">{{ poem.title }}</h3>
+        <h4 style="text-align: center">{{ poem.author }}</h4>
+        <p style="text-align: center">{{ poem.raw_content }}</p>
+    {% endfor %}
+</form>
+</body>
+</html>

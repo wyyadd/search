@@ -1,13 +1,13 @@
 # coding=utf-8
 import os
-import jieba
+# import jieba
 
 
 # 从dataset文件夹中读取诗句
 def read_data() -> dict:
     poem_str = {}
-    for s in os.listdir("./dataset"):
-        with open("./dataset/" + s, 'r', encoding='utf8') as file:
+    for s in sorted(os.listdir("./ESsearch/dataset")):
+        with open("./ESsearch/dataset/" + s, 'r', encoding='utf8') as file:
             poem_str[int(s.split('-')[0])] = (file.read())
     return poem_str
 
@@ -23,21 +23,24 @@ def generate_term_dict(text: list):
             else:
                 term_dict[c] = 1
     return term_dict
+
+
 def generate_biterm_dict(text: list):
     term_dict = {}
     for sentence in text:
         # for c in jieba.cut_for_search(sentence):
-        if(len(sentence)==0):
+        if len(sentence) == 0:
             continue
-        first=sentence[0]
+        first = sentence[0]
         for c in sentence[1:]:
-            word=first+c
-            first=c
+            word = first + c
+            first = c
             if word in term_dict:
                 term_dict[word] += 1
             else:
                 term_dict[word] = 1
     return term_dict
+
 
 def and2(p1, p2):
     """针对两个链表的and"""
