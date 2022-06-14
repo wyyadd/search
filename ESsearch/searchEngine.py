@@ -62,3 +62,4 @@ def search(query, dic, search_type) -> List[dictionary.Poem]:
     for doc in ans:
         poem_list.append(dic.doc_list[doc[0]])
     return poem_list
+

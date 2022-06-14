@@ -159,5 +159,5 @@ def merge_content_title(content_list, title_list):
         else:
             for m in range(i, len(content_list)):
                 res.append((content_list[m][0], 0.4 * content_list[m][1]))
-    return sorted(res, key=lambda value: value[1], reverse=True)  # 按照结果分数从大到小排序
+    return sorted(res, key=lambda value: value[1], reverse=True)[:5]  # 按照结果分数从大到小排序
     # return res  # 按照docid排序，最后统一按分数排序

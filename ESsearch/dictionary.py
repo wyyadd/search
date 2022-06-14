@@ -201,6 +201,9 @@ class Dic:
     def vector_search(self, *term):
         """向量搜索"""
         term = list(term)
+        for t in term[:]:
+            if t not in self.content_term_list.keys():
+                term.remove(t)
         # 按照idf大小降序排序
         list.sort(term, key=lambda x: self.content_term_list[x].idf, reverse=True)
         # key: docId, value: score
