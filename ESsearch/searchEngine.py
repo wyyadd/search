@@ -51,15 +51,25 @@ def parser(dic, keys):
     # print(str(res))
 
 
-def search(query, dic, search_type) -> List[dictionary.Poem]:
+class ResultDto:
+    def __init__(self, poem: dictionary.Poem, score: float):
+        self.title = poem.title
+        self.author = poem.author
+        self.content = poem.raw_content
+        self.score = score
+
+
+def search(query, dic, search_type, page) -> List[ResultDto]:
     poem_list = []
     if search_type == "一元MLE检索":
-        ans = dic.unigram_mle([char for char in query])
+        ans = dic.unigram_mle([char for char in query], page)
     elif search_type == "二元MLE检索":
-        ans = dic.bigram_mle([char for char in query])
+        ans = dic.bigram_mle([char for char in query], page)
+    elif search_type == "概率检索":
+        ans = dic.rsv([char for char in query], page)
     else:
         ans = parser(dic, query)
     for doc in ans:
-        poem_list.append(dic.doc_list[doc[0]])
+        poem_list.append(ResultDto(dic.doc_list[doc[0]], doc[1]))
     return poem_list
 

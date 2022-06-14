@@ -226,7 +226,7 @@ class Dic:
         # return top 5
         return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
 
-    def rsv(self, term):
+    def rsv(self, term, start):
         # key: docId, value: score
         scores = {}
         for t in term:
@@ -240,9 +240,9 @@ class Dic:
                     scores[s[0]] += ct
                 else:
                     scores[s[0]] = ct
-        return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
+        return sorted(scores.items(), key=lambda x: x[1], reverse=True)[start:start+10]
 
-    def unigram_mle(self, term):
+    def unigram_mle(self, term, start):
         res = {}
         lamda = 0.5
         for t in term:
@@ -263,9 +263,9 @@ class Dic:
                             lamda * temp_dic[docid] / self.doc_info[docid] + (1 - lamda) * total / self.total_count)
                 else:
                     res[docid] *= (1 - lamda) * total / self.total_count
-        return sorted(res.items(), key=lambda x: x[1], reverse=True)[:5]
+        return sorted(res.items(), key=lambda x: x[1], reverse=True)[start:start+10]
 
-    def bigram_mle(self, term):
+    def bigram_mle(self, term, start):
         res = {}
         lamda = 0.5
         first = term[0]
@@ -300,4 +300,4 @@ class Dic:
                 res[docid] *= 0.4 * uni + 0.6 * bi
             first = t
             # print(sorted(res.items(), key=lambda x: x[1], reverse=True)[:5])
-        return sorted(res.items(), key=lambda x: x[1], reverse=True)[:5]
+        return sorted(res.items(), key=lambda x: x[1], reverse=True)[start:start+10]

@@ -13,27 +13,39 @@
         vertical-align: middle;
     }
 </style>
-<body>
-<h1 style="text-align:center">唐诗搜索📖</h1>
-<form action="/search/" method="get">
-    <div style="text-align: center">
-        <label>
-            <select name="type" style="font-size: 22px; color: cadetblue">
-                <option>一元MLE检索</option>
-                <option>二元MLE检索</option>
-                <option>布尔检索</option>
-            </select>
-        </label>
-        <label>
-            <input type="text" name="query" maxlength="20" style="font-size: 24px">
-            <input type="submit" value="搜索" style="font-size: 20px; color: cadetblue">
-        </label>
-    </div>
-    {% for poem in poem_list %}
-        <h3 style="text-align: center">{{ poem.title }}</h3>
-        <h4 style="text-align: center">{{ poem.author }}</h4>
-        <p style="text-align: center">{{ poem.raw_content }}</p>
-    {% endfor %}
-</form>
-</body>
+    <body>
+    <h1 style="text-align:center">唐诗搜索📖</h1>
+        <form action="/search/" method="get">
+            <div style="text-align: center">
+                <label>
+                    <select name="type" style="font-size: 22px; color: cadetblue">
+                        <option>一元MLE检索</option>
+                        <option>二元MLE检索</option>
+                        <option>布尔检索</option>
+                        <option>概率检索</option>
+                    </select>
+                </label>
+                <label>
+                    <input type="text" name="query" maxlength="20" style="font-size: 24px">
+                    <input type="submit" value="搜索" style="font-size: 20px; color: cadetblue">
+                </label>
+            </div>
+            {% for poem in poem_list %}
+                <h3 style="text-align: center">{{ poem.title }}</h3>
+                <h5 style="text-align: center">{{ poem.author }}</h5>
+                <p style="text-align: center">{{ poem.content }}</p>
+            {% endfor %}
+            <div class="button-box" style="text-align: center">
+                <label>
+                    <select name="page" style="font-size: 22px; color: cadetblue">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </label>
+            </div>
+        </form>
+    </body>
 </html>
